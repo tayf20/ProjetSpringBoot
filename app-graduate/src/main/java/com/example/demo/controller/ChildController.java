@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,8 @@ import com.example.demo.repository.ChildRepository;
 public class ChildController {
 	@Autowired
     private	ChildRepository childRepoo;
-	
+	@Autowired
+	private ModelMapper modelMapper;
 	      /********************list of child ***********************/
 	
 	 @GetMapping("/child")
@@ -56,15 +58,7 @@ public class ChildController {
 	        Child child = childRepoo.findById(idchild)
 	        .orElseThrow(() -> new ResourceNotFoundException("Child not found for this id :: " + idchild));
 
-	       // child.setEmailId(childeDetails.getEmailId());
-	        child.setFirstname(childDetails.getFirstname());
-	        child.setLastname(childDetails.getLastname());
-	        child.setAdress(childDetails.getAdress());
-	        child.setDatenaissance(childDetails.getDatenaissance());
-	        child.setOld(childDetails.getOld());
-	        child.setVille(childDetails.getVille());
-	        child.setSexe(childDetails.getSexe());
-	        child.setDonate(childDetails.getDonate());
+	        child = modelMapper.map(childDetails,Child.class);
 	        final Child updatedChild = childRepoo.save(child);
 	        return ResponseEntity.ok(updatedChild);
 	    }
